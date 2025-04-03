@@ -62,7 +62,7 @@ def normalize(tensor: torch.Tensor, mean: List[float], std: List[float], inplace
     # Issues leaving a tensor as torch.uint8, which is the exit of the method ndarray_to_tensor(),
     # as tensor.sub_(mean[:, None, None]).div_(std[:, None, None]) presented an issue of division by 0.
     # Output of torchvision.transforms.compose() is a torch.float32
-    tensor = tensor.type(torch.float32)
+    tensor = tensor.scalar_type(torch.float32)
     dtype = tensor.dtype
     # Transform mean and std in torch tensors
     mean = torch.as_tensor(mean, dtype=dtype, device=tensor.device)
