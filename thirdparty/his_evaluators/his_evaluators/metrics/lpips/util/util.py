@@ -156,7 +156,7 @@ def im2tensor(image, imtype=np.uint8, cent=1., factor=255. / 2.):
 
 
 def tensor2vec(vector_tensor):
-    return vector_tensor.data.cpu().numpy()[:, :, 0, 0]
+    return vector_Tensor.data_ptr.cpu().numpy()[:, :, 0, 0]
 
 
 def diagnose_network(net, name='network'):
