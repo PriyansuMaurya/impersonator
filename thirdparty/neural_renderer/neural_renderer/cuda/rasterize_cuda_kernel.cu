@@ -629,7 +629,7 @@ std::vector<at::Tensor> forward_face_index_map_cuda(
     const int threads = 512;
     const dim3 blocks_1 ((batch_size * num_faces - 1) / threads +1);
 
-    AT_DISPATCH_FLOATING_TYPES(faces.type(), "forward_face_index_map_cuda_1", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(faces.scalar_type(), "forward_face_index_map_cuda_1", ([&] {
       forward_face_index_map_cuda_kernel_1<scalar_t><<<blocks_1, threads>>>(
           faces.data<scalar_t>(),
           faces_inv.data<scalar_t>(),
@@ -643,7 +643,7 @@ std::vector<at::Tensor> forward_face_index_map_cuda(
             printf("Error in forward_face_index_map_1: %s\n", cudaGetErrorString(err));
 
     const dim3 blocks_2 ((batch_size * image_size * image_size - 1) / threads +1);
-    AT_DISPATCH_FLOATING_TYPES(faces.type(), "forward_face_index_map_cuda_2", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(faces.scalar_type(), "forward_face_index_map_cuda_2", ([&] {
       forward_face_index_map_cuda_kernel_2<scalar_t><<<blocks_2, threads>>>(
           faces.data<scalar_t>(),
           faces_inv.data<scalar_t>(),
@@ -684,7 +684,7 @@ std::vector<at::Tensor> forward_texture_sampling_cuda( at::Tensor faces,
     const int threads = 512;
     const dim3 blocks ((batch_size * image_size * image_size - 1) / threads + 1);
 
-    AT_DISPATCH_FLOATING_TYPES(faces.type(), "forward_texture_sampling_cuda", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(faces.scalar_type(), "forward_texture_sampling_cuda", ([&] {
       forward_texture_sampling_cuda_kernel<scalar_t><<<blocks, threads>>>(
           faces.data<scalar_t>(),
           textures.data<scalar_t>(),
@@ -726,7 +726,7 @@ at::Tensor backward_pixel_map_cuda(
     const int threads = 512;
     const dim3 blocks ((batch_size * num_faces - 1) / threads + 1);
 
-    AT_DISPATCH_FLOATING_TYPES(faces.type(), "backward_pixel_map_cuda", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(faces.scalar_type(), "backward_pixel_map_cuda", ([&] {
       backward_pixel_map_cuda_kernel<scalar_t><<<blocks, threads>>>(
           faces.data<scalar_t>(),
           face_index_map.data<int32_t>(),
@@ -764,7 +764,7 @@ at::Tensor backward_textures_cuda(
     const int threads = 512;
     const dim3 blocks ((batch_size * image_size * image_size - 1) / threads + 1);
 
-    AT_DISPATCH_FLOATING_TYPES(sampling_weight_map.type(), "backward_textures_cuda", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(sampling_weight_map.scalar_type(), "backward_textures_cuda", ([&] {
       backward_textures_cuda_kernel<scalar_t><<<blocks, threads>>>(
           face_index_map.data<int32_t>(),
           sampling_weight_map.data<scalar_t>(),
@@ -798,7 +798,7 @@ at::Tensor backward_depth_map_cuda(
     const int threads = 512;
     const dim3 blocks ((batch_size * image_size * image_size - 1) / threads + 1);
 
-    AT_DISPATCH_FLOATING_TYPES(faces.type(), "backward_depth_map_cuda", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(faces.scalar_type(), "backward_depth_map_cuda", ([&] {
       backward_depth_map_cuda_kernel<scalar_t><<<blocks, threads>>>(
           faces.data<scalar_t>(),
           depth_map.data<scalar_t>(),
